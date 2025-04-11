@@ -9,22 +9,24 @@
 	type="group" 
     extends="NXobject">
     <doc>
-        Base class for a generic cooling device in a synthesis apparatus
+        Base class defining a generic cooling device used in synthesis or deposition apparatuses. 
+		It captures key information such as the device name, model, cooling method, and nominal operating temperature. 
+		This class is intended to support a wide range of experimental setups requiring controlled thermal environments.
     </doc>
 
 	<field name="name" type="NX_CHAR">
 		<doc>
-            Name for the cooling device
+            Name for the cooling device.
         </doc>
 	</field>
 	<field name="model" type="NX_CHAR">
 		<doc>
-            Cooling device identification code/model number
+            Cooling device identification code/model number.
         </doc>
 	</field>
     <field name="cooling_mode" type="NX_CHAR">
         <doc>
-            Mode used to cool the chamber
+            Cooling medium or method employed to regulate the system's temperature.
         </doc>
 		<enumeration>
 			<item value="liquid_nitrogen" />
@@ -37,7 +39,7 @@
 	</field>
     <field name="temperature" type="NX_FLOAT" unit="NX_TEMPERATURE">
 		<doc>
-			Nominal temperature of the system
+			Target or nominal operating temperature of the cooling system.
 		</doc>
 	</field>
 
