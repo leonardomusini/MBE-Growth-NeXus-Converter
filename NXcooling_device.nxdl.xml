@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="nxdlformat.xsl" ?>
+
+<definition xmlns="http://definition.nexusformat.org/nxdl/3.1" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://definition.nexusformat.org/nxdl/3.1 ../nxdl.xsd"
+    category="base"
+	name="NXcooling_device" 
+	type="group" 
+    extends="NXobject">
+    <doc>
+        Base class for a generic cooling device in a synthesis apparatus
+    </doc>
+
+	<field name="name" type="NX_CHAR">
+		<doc>
+            Name for the cooling device
+        </doc>
+	</field>
+	<field name="model" type="NX_CHAR">
+		<doc>
+            Cooling device identification code/model number
+        </doc>
+	</field>
+    <field name="cooling_mode" type="NX_CHAR">
+        <doc>
+            Mode used to cool the chamber
+        </doc>
+		<enumeration>
+			<item value="liquid_nitrogen" />
+			<item value="gaseous_nitrogen" />
+			<item value="water" />
+			<item value="air" />
+			<item value="other" />
+			<item value="off" />
+		</enumeration>
+	</field>
+    <field name="temperature" type="NX_FLOAT" unit="NX_TEMPERATURE">
+		<doc>
+			Nominal temperature of the system
+		</doc>
+	</field>
+
+</definition>

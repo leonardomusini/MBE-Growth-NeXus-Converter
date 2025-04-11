@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="nxdlformat.xsl"?>
+
+<definition xmlns="http://definition.nexusformat.org/nxdl/3.1"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://definition.nexusformat.org/nxdl/3.1 ../nxdl.xsd"
+    category="application" 
+    name="NXepitaxy"  
+    type="group"
+    extends="NXobject">
+    <doc>
+        
+    </doc>
+
+    <group name="entry" type="NXentry" minOccurs="1">
+        <field name="definition" type="NX_CHAR" minOccurs="1">
+            <doc>
+                NeXus NXDL schema with which this file was written.
+            </doc>
+        </field>
+        <field name="title" type="NX_CHAR" minOccurs="1">
+            <doc>
+                Extended title of the growth described by this file:
+                it contains name of the sample and date of the synthesis process.
+            </doc>
+        </field>
+        <field name="experiment_description" type="NX_CHAR" minOccurs="1">
+            <doc>
+                Brief summary of the growing process, including key objectives.
+            </doc>
+        </field>
+        <field name="start_time" type="NX_DATE_TIME" minOccurs="1">
+            <doc>
+                Starting time of growth.
+            </doc>
+        </field>
+        <field name="end_time" type="NX_DATE_TIME" minOccurs="1">
+            <doc>
+                Ending time of growth.
+            </doc>
+        </field>
+        <field name="duration" type="NX_FLOAT" unit="NX_TIME" minOccurs="1">
+            <doc>
+                Total time of growth.
+            </doc>
+        </field>
+
+        <group name="user" type="NXuser" minOccurs="1" maxOccurs="unbounded">
+            <field name="name" type="NX_CHAR" minOccurs="1">
+                <doc>
+                    Name of user responsible for this growth.
+                </doc>
+            </field>
+            <field name="affiliation" type="NX_CHAR" minOccurs="1">
+                <doc>
+                    Affiliation of user.
+                </doc>
+            </field>
+            <field name="role" type="NX_CHAR" minOccurs="1">
+                <doc>
+                    Role of user.
+                </doc>
+            </field>
+            <field name="email" type="NX_CHAR" minOccurs="1">
+                <doc>
+                    Email of user.
+                </doc>
+            </field>
+            <field name="ORCID" type="NX_CHAR" minOccurs="1">
+                <doc>
+                    Open Researcher and Contributor ID,
+                    defined by https://orcid.org and expressed as a URI.
+                </doc>
+            </field>
+        </group>
+
+        <group name="sample" type="NXsample" minOccurs="1">
+            <field name="name" type="NX_CHAR" minOccurs="1">
+                <doc>
+                    Descriptive name of sample.
+                </doc>
+            </field>
+            <field name="thickness" type="NX_FLOAT" unit="NX_LENGTH" minOccurs="1">
+                <doc>
+                    Total thickness of the sample.
+                </doc>
+            </field>
+
+            <group name="substrate" type="NXsample_component" minOccurs="1">
+                <field name="name" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Descriptive name of the substrate.
+                    </doc>
+                </field>
+                <field name="chemical_formula" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        The chemical formula of the substrate.
+                    </doc>
+                </field>
+                <field name="thickness" type="NX_FLOAT" unit="NX_LENGTH" minOccurs="1">
+                    <doc>
+                        Thickness of the substrate.
+                    </doc>
+                </field>
+                <field name="area" type="NX_FLOAT" unit="NX_AREA" minOccurs="1">
+                    <doc>
+                        Area of the substrate.
+                    </doc>
+                </field>
+                <field name="diameter" type="NX_FLOAT" unit="NX_LENGTH" minOccurs="1">
+                    <doc>
+                        Diameter of the wafer.
+                    </doc>
+                </field>
+                <field name="crystal_orientation" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Crystal direction of the material.
+                    </doc>
+                </field>
+                <field name="flat_convention" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Flat convention of the wafer.
+                    </doc>
+                </field>
+                <field name="doping" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Doping type and level of the substrate (e.g., p+, n, SI).
+                    </doc>
+                </field>
+                <field name="holder" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Type of substrate holder used in the process.
+                    </doc>
+                </field>
+                <field name="crystalline_structure" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Crystalline structure of the material.
+                        URI: https://w3id.org/pmd/co/CrystallineStructure
+                    </doc>
+                </field>
+            </group>
+
+            <group name="layer" type="NXsample_component" minOccurs="1" maxOccurs="unbounded">
+                <field name="name" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Descriptive name of sample component.
+                    </doc>
+                </field>
+                <field name="chemical_formula" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        The chemical formula of the layer specified.
+                    </doc>
+                </field>
+                <field name="doping" type="NX_CHAR" minOccurs="0">
+                    <doc>
+                        Doping type of the layer.
+                    </doc>
+                </field>
+                <field name="thickness" type="NX_FLOAT" unit="NX_LENGTH" minOccurs="1">
+                    <doc>
+                        Thickness of the current layer.
+                    </doc>
+                </field>
+                <field name="growth_temperature" type="NX_FLOAT" unit="NX_TEMPERATURE" minOccurs="1">
+                    <doc>
+                        Growing temperature of the current layer.
+                    </doc>
+                </field>
+                <field name="growth_time" type="NX_FLOAT" unit="NX_TIME" minOccurs="1">
+                    <doc>
+                        Growing time of the current layer.
+                    </doc>
+                </field>
+                <field name="growth_rate" type="NX_FLOAT" unit="NX_FREQUENCY" minOccurs="1">
+                    <doc>
+                        Growing rate of the current layer.
+                    </doc>
+                </field>
+                <field name="alloy_fraction" type="NX_FLOAT" unit="NX_UNITLESS" minOccurs="1">
+                    <doc>
+                        Fraction of the first element in a ternary alloy.
+                        URI: 
+                    </doc>
+                </field>
+                <field name="rotational_frequency" type="NX_FLOAT" unit="NX_FREQUENCY" minOccurs="1">
+                    <doc>
+                        Rotational frequency of the sample for the current layer.
+                        URI: https://goldbook.iupac.org/terms/view/R05412
+                    </doc>
+                </field>
+                
+                <group name="cell" type="NXmaterial_source" minOccurs="0" maxOccurs="unbounded">
+                    <field name="name" type="NX_CHAR" minOccurs="0">
+                        <doc>
+                            Name for the material source device
+                        </doc>
+                    </field>
+                    <field name="model" type="NX_CHAR" minOccurs="0">
+                        <doc>
+                            material source device identification code/model number
+                        </doc>
+                    </field>
+                    <field name="type" type="NX_CHAR" minOccurs="0">
+                        <doc>
+                            Type of material source used in the chamber
+                        </doc>
+                        <enumeration>
+                            <item value="effusion_cell" />
+                            <item value="cracker_cell" />
+                            <item value="filament" />
+                        </enumeration>
+                    </field>
+                    <field name="partial_growth_rate" type="NX_FLOAT" unit="NX_FREQUENCY" minOccurs="0">
+                        <doc>
+                            Partial growth rate of the cell
+                        </doc>
+                    </field>
+                    <field name="partial_pressure" type="NX_FLOAT" unit="NX_PRESSURE" minOccurs="0">
+                        <doc>
+                            Partial pressure of the cell
+                        </doc>
+                    </field>
+                </group>
+
+        <group name="instrument" type="NXinstrument" minOccurs="0">
+
+            <group name="chamber" type="NXenvironment" minOccurs="1">
+                <field name="name" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Name or model of the chamber.
+                    </doc>
+                </field>
+                <field name="type" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Type of chamber.
+                    </doc>
+                </field>
+                <field name="description" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Information of the chamber (ex. cooling system).
+                    </doc>
+                </field>
+
+                <group name="sensor" type="NXsensor" minOccurs="0" maxOccurs="unbounded">
+                    <field name="name" type="NX_CHAR" minOccurs="1">
+                        <doc>
+                            Name of sensor.
+                        </doc>
+                    </field>
+                    <field name="model" type="NX_CHAR" minOccurs="1">
+                        <doc>
+                            Model of sensor.
+                        </doc>
+                    </field>
+                    <field name="measurement" type="NX_CHAR" minOccurs="1">
+                        <doc>
+                            Name of measured signal.
+                        </doc>
+                    </field>
+                    <field name="value" type="NX_FLOAT" unit="NX_ANY" minOccurs="0">
+                        <doc>
+                            Nominal or average value.
+                        </doc>
+                    </field>
+                </group>
+            </group>               
+
+            <group name="cooling_device" type="NXcooling_device" minOccurs="0">
+                <field name="name" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Name for the cooling device
+                    </doc>
+                </field>
+                <field name="model" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Cooling device identification code/model number
+                    </doc>
+                </field>
+                <field name="cooling_mode" type="NX_CHAR" minOccurs="1">
+                    <doc>
+                        Mode used to cool the chamber
+                    </doc>
+                    <enumeration>
+                        <item value="liquid_nitrogen" />
+                        <item value="gaseous_nitrogen" />
+                        <item value="water" />
+                        <item value="air" />
+                        <item value="other" />
+                        <item value="off" />
+                    </enumeration>
+                </field>
+                <field name="temperature" type="NX_FLOAT" unit="NX_TEMPERATURE" minOccurs="1">
+                    <doc>
+                        Nominal temperature of the system
+                    </doc>
+                </field>
+            </group>
+        </group>
+
+        
+    </group>
+</definition>
