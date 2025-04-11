@@ -14,6 +14,7 @@
         about the sample structure, growth parameters, instrument configuration, 
         and user metadata. The schema is designed to support a wide range of epitaxy techniques, 
         ensuring reproducibility, interoperability, and clarity of deposition data.
+        URI: http://purl.obolibrary.org/obo/CHMO_0001336
     </doc>
 
     <group name="entry" type="NXentry" minOccurs="1">

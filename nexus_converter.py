@@ -6,16 +6,16 @@ import numpy as np
 from parser import *
 from utils import *
 
-sample_id_list = file_searcher("./growths2/")
+sample_id_list = file_searcher("./growths/processes/")
 
 for sample_id in sample_id_list:
 
     try:
-        wri_path = f"./growths2/hm{sample_id}.wri"
+        wri_path = f"./growths/processes/hm{sample_id}.wri"
 
         ep_path = None
         for ext in ["ep4", "ep3", "ep2"]:
-            ep_path_candidate = f"./growths2/hm{sample_id}.{ext}"
+            ep_path_candidate = f"./growths/processes/hm{sample_id}.{ext}"
             if os.path.exists(ep_path_candidate):
                 ep_path = ep_path_candidate
                 break
@@ -65,7 +65,7 @@ for sample_id in sample_id_list:
 
 
         # Path of the file
-        output_directory = Path("./nexus2")  
+        output_directory = Path("./nexus_files")  
         output_directory.mkdir(parents=True, exist_ok=True)
 
         # File name
