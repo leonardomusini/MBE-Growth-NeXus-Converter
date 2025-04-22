@@ -279,38 +279,38 @@
                         </doc>
                     </field>
                 </group>
-            </group>               
 
-            <group name="cooling_device" type="NXcooling_device" minOccurs="0">
-                <field name="name" type="NX_CHAR">
-                    <doc>
-                        Name for the cooling device.
-                    </doc>
-                </field>
-                <field name="model" type="NX_CHAR">
-                    <doc>
-                        Cooling device identification code/model number.
-                    </doc>
-                </field>
-                <field name="cooling_mode" type="NX_CHAR">
-                    <doc>
-                        Cooling medium or method employed to regulate the system's temperature.
-                    </doc>
-                    <enumeration>
-                        <item value="liquid_nitrogen" />
-                        <item value="gaseous_nitrogen" />
-                        <item value="water" />
-                        <item value="air" />
-                        <item value="other" />
-                        <item value="off" />
-                    </enumeration>
-                </field>
-                <field name="temperature" type="NX_FLOAT" unit="NX_TEMPERATURE">
-                    <doc>
-                        Target or nominal operating temperature of the cooling system.
-                    </doc>
-                </field>
-            </group>
+                <group name="cooling_device" type="NXcooling_device" minOccurs="0">
+                    <field name="name" type="NX_CHAR">
+                        <doc>
+                            Name for the cooling device.
+                        </doc>
+                    </field>
+                    <field name="model" type="NX_CHAR">
+                        <doc>
+                            Cooling device identification code/model number.
+                        </doc>
+                    </field>
+                    <field name="cooling_mode" type="NX_CHAR">
+                        <doc>
+                            Cooling medium or method employed to regulate the system's temperature.
+                        </doc>
+                        <enumeration>
+                            <item value="liquid_nitrogen" />
+                            <item value="gaseous_nitrogen" />
+                            <item value="water" />
+                            <item value="air" />
+                            <item value="other" />
+                            <item value="off" />
+                        </enumeration>
+                    </field>
+                    <field name="temperature" type="NX_FLOAT" unit="NX_TEMPERATURE">
+                        <doc>
+                            Target or nominal operating temperature of the cooling system.
+                        </doc>
+                    </field>
+                </group>
+            </group>              
         </group>
     </group>
 </definition>

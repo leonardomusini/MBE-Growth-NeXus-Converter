@@ -7,28 +7,48 @@ import numpy as np
 
 def file_searcher(folder_path):
     """
-    Extracts the sample ID part of filenames for all .wri files in a given folder.
+    Extracts sample IDs and their numeric components from all .wri files in the specified folder.
 
-    :param folder_path: Path to the folder containing .wri files.
-    :return: List of sample IDs (as integers).
+    Parameters:
+        folder_path (str): Path to the folder containing .wri files.
+
+    Returns:
+        sample_ids (list of str): List of sample ID strings.
+        numbers (list of str): List of numeric parts found within those sample IDs.
     """
-    extracted_ids = []
+    sample_ids = []
+    numbers = []
 
     if not os.path.isdir(folder_path):
         print("Error: The provided folder path does not exist.")
-        return []
+        return [], []
 
     # Iterate over files in the folder
     for filename in os.listdir(folder_path):
         if filename.lower().endswith(".wri"):  
-            sample_id = filename[2:-4] 
-            extracted_ids.append(sample_id)
+            sample_id = filename[0:-4] 
+            sample_ids.append(sample_id)
 
-    return extracted_ids
+            # Extract numeric part from sample_id
+            match = re.search(r"\d+", sample_id)
+            if match:
+                numbers.append(match.group())
+
+    return sample_ids, numbers
 
 # ----------------------------------
 
 def time_calculator(time_str, time_delta_str):
+    """
+    Adds a time delta (HH:MM:SS) to a given time string (HH:MM:SS).
+
+    Parameters:
+        time_str (str): Base time string.
+        time_delta_str (str): Time delta string to add.
+
+    Returns:
+        str: Resulting time after addition, formatted as "HH:MM:SS".
+    """
 
     time_obj = datetime.strptime(time_str, "%H:%M:%S")
     h, m, s = map(int, time_delta_str.split(":"))  
@@ -91,11 +111,20 @@ def time_converter(date_str, time_str):
 # ----------------------------------
 
 def arsenic_ranges(value):
+    """
+    Convert a string representing a range in scientific notation, returning the average of the range.
+
+    Parameters:
+        value (str): A string representing a number or a range, e.g., "3.0-1.2E-3" or "1.0E-2"
+
+    Returns:
+        float: The average of the range or the single float value.
+    """
 
     # Typo in scientific notation
     value = value.strip().replace(".E", "E")
 
-    # Pattern to detect ranges"
+    # Pattern to detect ranges
     match = re.match(r"^(\d+(\.\d+)?)-(\d+(\.\d+)?E[-+]?\d+)$", value)
     
     if match:
@@ -119,9 +148,19 @@ def arsenic_ranges(value):
 # ----------------------------------
 
 def doping_calculator(dop_element, Si_curr, C_curr, g_rate):
+    """
+    Calculates the doping level based on the dopant type and its growth rate.
     
-    #gr_ratio = 2.8 / g_rate
-
+    Parameters:
+        dop_element (str): Type of dopant, either 'C' for Carbon or 'Si' for Silicon.
+        Si_curr (float): Current Silicon concentration.
+        C_curr (float): Current Carbon concentration.
+        g_rate (float): Growth rate used for normalization.
+    
+    Returns:
+        float: Calculated doping level, or 0.0 if inputs are invalid or dopant is None.
+    """
+    
     if dop_element is None:
         return 0.0
     
@@ -141,33 +180,70 @@ def doping_calculator(dop_element, Si_curr, C_curr, g_rate):
     else:
         raise ValueError(f"Unknown dopant: {dop_element}")
 
+# ----------------------------------
 
-
-# Extra utils functions
-
-def file_searcher_old(folder_path):
+def log_time_converter(log_time):
     """
-    Extracts the numerical part of filenames for all .wri files in a given folder.
+    Converts a list of time strings in HH:MM:SS format to total seconds.
 
-    :param folder_path: Path to the folder containing .wri files.
-    :return: List of extracted numbers (as integers).
+    Parameters:
+        log_time (list of str): List of time strings formatted as "HH:MM:SS".
+
+    Returns:
+        list of int: List of corresponding times in seconds.
     """
-    extracted_numbers = []
+    def time_to_sec(t):
+        h, m, s = map(int, t.split(":"))
+        return h * 3600 + m * 60 + s
+    
+    log_time_new = [time_to_sec(t) for t in log_time]
 
-    if not os.path.isdir(folder_path):
-        print("Error: The provided folder path does not exist.")
+    return log_time_new
+
+# ----------------------------------
+
+def dayfraction_converter(day_fractions):
+    """
+    Converts a list of day fractions into seconds relative to the first entry.
+
+    Parameters:
+        day_fractions (list of float): List of day fractions.
+
+    Returns:
+        list of int: List of time differences in seconds relative to the first day fraction.
+    """
+    if not day_fractions:
         return []
 
-    # Regex pattern to capture numbers in the filename before .wri
-    pattern = re.compile(r"(\d+)", re.IGNORECASE)
+    base = day_fractions[0]
 
-    # Iterate over files in the folder
-    for filename in os.listdir(folder_path):
-        if filename.lower().endswith(".wri"):  
-            match = pattern.search(filename)
-            if match:
-                extracted_numbers.append(int(match.group(1))) 
+    # Convert each day fraction to seconds relative to the start of the measurement
+    log_seconds = [int((df - base) * 86400) for df in day_fractions]
 
-    return extracted_numbers
+    return log_seconds
 
-   
+# ----------------------------------
+
+def alloy_inserter(material, alloy):
+    """
+    Inserts alloy composition values into a material name string.
+    
+    Parameters:
+        material (str): A 6-character string representing a material composed of 3 elements with each element is assumed to be 2 characters long.
+        alloy (float): A float between 0 and 1 indicating the alloy fraction of the second element.
+    
+    Returns:
+        str: A new string with alloy composition inserted.
+    """
+
+    if len(material) == 6:
+        el1 = material[:2]
+        el2 = material[2:4]
+        el3 = material[4:]
+
+        # EL1(x)EL2(1-x)EL3
+        new_name = f"{el1}({alloy:.2f}){el2}({1 - alloy:.2f}){el3}"
+
+        return new_name
+
+    raise ValueError("Material string must be exactly 6 characters long (3 elements of 2 chars each).")
