@@ -2,14 +2,14 @@
 
 This repository contains a Python tool designed to convert legacy text files into standardized **NeXus** files, tailored for the **HMMBE Laboratory** at **CNR-IOM** in Trieste, specialized in **Molecular Beam Epitaxy (MBE)** for the synthesis of high-quality III/V semiconductor samples.
 
-The conversion of raw laboratory files into structured NeXus format helps to supports the adoption of the **FAIR data principles**, ensuring that scientific experimental data are **Findable**, **Accessible**, **Interoperable**, and **Reusable** for long-term use, collaboration, and reproducibility.
+The conversion of raw laboratory files into structured NeXus format helps to support the adoption of the **FAIR data principles**, ensuring that scientific experimental data are **Findable**, **Accessible**, **Interoperable**, and **Reusable** for long-term use, collaboration, and reproducibility.
 
 ## Structure of the directory
 
 - **`custom_schemas/`**: directory containing the custom NeXus application definition and base classes used.
-    - **`applications/NXepitaxy.nxdl.xml`**: XML documentation of the NXepitaxy application definition.
-    - **`base_classes/NXcooling_device.nxdl.xml`**: XML documentation of the NXcooling_device base class.
-    - **`base_classes/NXmaterial_source.nxdl.xml`**: XML documentation of the NXmaterial_source base class.
+    - **`applications/NXepitaxy.nxdl.xml`**: XML documentation of the **NXepitaxy** application definition.
+    - **`base_classes/NXcooling_device.nxdl.xml`**: XML documentation of the **NXcooling_device** base class.
+    - **`base_classes/NXmaterial_source.nxdl.xml`**: XML documentation of the **NXmaterial_source** base class.
 
 - **`growths/`**: directory containing the text files from which the data is retrieved.
     - **`processes/`**: directory of the `.wri` and `.ep` files containing the MBE deposition process data and metadata.
@@ -29,7 +29,7 @@ The conversion of raw laboratory files into structured NeXus format helps to sup
 To use the scripts, first clone this repository:
 
 ```sh
-git clone https://github.com/your-username/MBE-Growth-NeXus-Converter.git
+git clone https://github.com/leonardomusini/MBE-Growth-NeXus-Converter.git
 cd MBE-Growth-NeXus-Converter
 ```
 Then, in a Python virtual environment (recommended), install all the necessary libraries and dipendencies:
