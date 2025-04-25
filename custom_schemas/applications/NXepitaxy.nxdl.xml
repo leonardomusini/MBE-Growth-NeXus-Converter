@@ -12,8 +12,8 @@
         This application definition, NXepitaxy, provides a standardized schema 
         for recording epitaxial deposition processes. It captures detailed information 
         about the sample structure, growth parameters, instrument configuration, 
-        and user metadata. The schema is designed to support a wide range of epitaxy techniques, 
-        ensuring reproducibility, interoperability, and clarity of deposition data.
+        and user metadata. The schema is intended to support a wide range of epitaxy techniques,
+        though specific implementations are yet to be formally defined. 
         URI: http://purl.obolibrary.org/obo/CHMO_0001336
     </doc>
 
@@ -32,7 +32,7 @@
         </field>
         <field name="experiment_description" type="NX_CHAR" minOccurs="1">
             <doc>
-                Brief summary of the deposition process, including key objectives.
+                Brief summary of the deposition process.
             </doc>
         </field>
         <field name="start_time" type="NX_DATE_TIME" minOccurs="1">
@@ -54,7 +54,7 @@
         <group name="user" type="NXuser" minOccurs="1" maxOccurs="unbounded">
             <field name="name" type="NX_CHAR" minOccurs="1">
                 <doc>
-                    Full name of the researcher responsible for the deposition.
+                    Full name of the researcher user responsible for the deposition.
                 </doc>
             </field>
             <field name="affiliation" type="NX_CHAR" minOccurs="1">
@@ -62,12 +62,12 @@
                     Affiliation of user.
                 </doc>
             </field>
-            <field name="role" type="NX_CHAR" minOccurs="1">
+            <field name="role" type="NX_CHAR" minOccurs="0" recommended="true">
                 <doc>
                     Role of user.
                 </doc>
             </field>
-            <field name="email" type="NX_CHAR" minOccurs="1">
+            <field name="email" type="NX_CHAR" minOccurs="0" recommended="true">
                 <doc>
                     Email of user.
                 </doc>
@@ -113,7 +113,7 @@
                         Surface area of the substrate.
                     </doc>
                 </field>
-                <field name="diameter" type="NX_FLOAT" unit="NX_LENGTH" minOccurs="1">
+                <field name="diameter" type="NX_FLOAT" unit="NX_LENGTH" minOccurs="0">
                     <doc>
                         Diameter of the wafer.
                     </doc>
@@ -157,7 +157,7 @@
                         Chemical formula representing the layer material.
                     </doc>
                 </field>
-                <field name="doping" type="NX_CHAR" minOccurs="0">
+                <field name="doping" type="NX_CHAR" minOccurs="0" recommended="true">
                     <doc>
                         Doping information for the layer.
                     </doc>
@@ -182,19 +182,19 @@
                         Growth rate of the layer, typically Å/s.
                     </doc>
                 </field>
-                <field name="alloy_fraction" type="NX_FLOAT" unit="NX_UNITLESS" minOccurs="1">
+                <field name="alloy_fraction" type="NX_FLOAT" unit="NX_UNITLESS" minOccurs="0" recommended="true">
                     <doc>
                         Alloy composition fraction for ternary/quaternary compounds.
                     </doc>
                 </field>
-                <field name="rotational_frequency" type="NX_FLOAT" unit="NX_FREQUENCY" minOccurs="1">
+                <field name="rotational_frequency" type="NX_FLOAT" unit="NX_FREQUENCY" minOccurs="0" recommended="true">
                     <doc>
                         Rotation frequency of the sample holder during growth.
                         URI: https://goldbook.iupac.org/terms/view/R05412
                     </doc>
                 </field>
                 
-                <group name="cell" type="NXmaterial_source" minOccurs="0" maxOccurs="unbounded">
+                <group name="cell" type="NXmaterial_source" minOccurs="1" maxOccurs="unbounded">
                     <field name="name" type="NX_CHAR">
                         <doc>
                             Name for the material source device
@@ -202,7 +202,7 @@
                     </field>
                     <field name="model" type="NX_CHAR">
                         <doc>
-                            material source device identification code/model number
+                            Material source device identification code/model number
                         </doc>
                     </field>
                     <field name="type" type="NX_CHAR">
@@ -238,7 +238,7 @@
             </group>
         </group>
 
-        <group name="instrument" type="NXinstrument" minOccurs="0">
+        <group name="instrument" type="NXinstrument" minOccurs="1">
 
             <group name="chamber" type="NXenvironment" minOccurs="1">
                 <field name="name" type="NX_CHAR" minOccurs="1">
@@ -251,13 +251,18 @@
                         Type of apparatus.
                     </doc>
                 </field>
-                <field name="description" type="NX_CHAR" minOccurs="1">
+                <field name="description" type="NX_CHAR" minOccurs="0" recommended="true">
                     <doc>
                         Description of the apparatus.
                     </doc>
                 </field>
+                <field name="program" type="NX_CHAR" minOccurs="0" recommended="true">
+                    <doc>
+                        Program controlling the apparatus.
+                    </doc>
+                </field>
 
-                <group name="sensor" type="NXsensor" minOccurs="0" maxOccurs="unbounded">
+                <group name="sensor" type="NXsensor" minOccurs="0" maxOccurs="unbounded" recommended="true">
                     <field name="name" type="NX_CHAR" minOccurs="1">
                         <doc>
                             Name for the sensor.
@@ -280,7 +285,7 @@
                     </field>
                 </group>
 
-                <group name="cooling_device" type="NXcooling_device" minOccurs="0">
+                <group name="cooling_device" type="NXcooling_device" minOccurs="1">
                     <field name="name" type="NX_CHAR">
                         <doc>
                             Name for the cooling device.

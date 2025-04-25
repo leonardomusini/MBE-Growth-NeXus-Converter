@@ -5,10 +5,10 @@ __pycache__/
 venv/
 
 # Ignore specific folders 
-growths/
+growths1/
 growths2/
 growths3/
-nexus_files/
+nexus1/
 nexus2/   
 nexus3/
 

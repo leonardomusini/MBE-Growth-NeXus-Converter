@@ -26,10 +26,10 @@ for sample_id, number in zip(sample_id_list, number_list):
 
         # Required files
         if not os.path.exists(wri_path):
-            print("Error: Missing wri file, skipping this iteration.")
+            print(f"Error: Missing {sample_id} wri file, skipping this iteration.")
             continue  
         if ep_path is None:
-            print("Error: Missing ep file, skipping this iteration.")
+            print(f"Error: Missing {sample_id} ep file, skipping this iteration.")
             continue
 
         # Parsing the files
@@ -251,8 +251,8 @@ for sample_id, number in zip(sample_id_list, number_list):
                 layer['rotational_frequency'].attrs["description"] = 'Rotational frequency of the sample for the current layer'
                 layer['rotational_frequency'].attrs["units"] = 'rpm'
 
-                cell_material = ["Ga", "Ga", "Al", "In"]
-                cell_names = ["First Gallium Cell", "Second Gallium Cell", "Alluminium Cell", "Indium Cell"]
+                cell_material = ["Gallium", "Gallium", "Aluminium", "Indium"]
+                cell_names = ["First Gallium Cell", "Second Gallium Cell", "Aluminium Cell", "Indium Cell"]
                 cell_number = 0
                 for k, open in enumerate(shutters[i]):
                     if open:
@@ -299,7 +299,7 @@ for sample_id, number in zip(sample_id_list, number_list):
                 cell_as.create_dataset('shutter_status', data='open')
                 cell_as['shutter_status'].attrs["description"] = 'Status of the shutter during this layer growth step'
                 # /entry/sample/layer/cell/material
-                cell_as.create_dataset('material', data='As')
+                cell_as.create_dataset('material', data='Arsenic')
                 cell_as['material'].attrs["description"] = 'Material of the cell'
                 # /entry/sample/layer/cell/partial_pressure
                 cell_as.create_dataset('partial_pressure', data=As_pp)
@@ -357,8 +357,8 @@ for sample_id, number in zip(sample_id_list, number_list):
                             layer['rotational_frequency'].attrs["description"] = 'Rotational frequency of the sample for the current layer'
                             layer['rotational_frequency'].attrs["units"] = 'rpm'
                             
-                            cell_material = ["Ga", "Ga", "Al", "In"]
-                            cell_names = ["First Gallium Cell", "Second Gallium Cell", "Alluminium Cell", "Indium Cell"]
+                            cell_material = ["Gallium", "Gallium", "Aluminium", "Indium"]
+                            cell_names = ["First Gallium Cell", "Second Gallium Cell", "Aluminium Cell", "Indium Cell"]
                             cell_number = 0
                             for k, open in enumerate(shutters[i]):
                                 if open:
@@ -405,7 +405,7 @@ for sample_id, number in zip(sample_id_list, number_list):
                             cell_as.create_dataset('shutter_status', data='open')
                             cell_as['shutter_status'].attrs["description"] = 'Status of the shutter during this layer growth step'
                             # /entry/sample/layer/cell/material
-                            cell_as.create_dataset('material', data='As')
+                            cell_as.create_dataset('material', data='Arsenic')
                             cell_as['material'].attrs["description"] = 'Material of the cell'
                             # /entry/sample/layer/cell/partial_pressure
                             cell_as.create_dataset('partial_pressure', data=As_pp)
@@ -430,8 +430,11 @@ for sample_id, number in zip(sample_id_list, number_list):
             chamber.create_dataset('type',data='Ultra High Vacuum (UHV) Chamber')
             chamber['type'].attrs['description'] = 'Type of growing chamber'
             # /entry/instrument/chamber/description
-            chamber.create_dataset('description',data='')
-            chamber['description'].attrs['description'] = 'Information of the chamber (ex. cooling system)'
+            chamber.create_dataset('description',data='High mobility III-V MBE system, equipped with As (2X), Ga (2X), Al, In effusion cells and Si and C doping sources.')
+            chamber['description'].attrs['description'] = 'Information of the chamber'
+            # /entry/instrument/chamber/program
+            chamber.create_dataset('program',data='LabView program developed in-house')
+            chamber['program'].attrs['description'] = 'Program controlling the apparatus'
 
             # /entry/instrument/chamber/sensor_1
             chamber.create_group(f"sensor_1")
@@ -456,9 +459,21 @@ for sample_id, number in zip(sample_id_list, number_list):
                 chamber['sensor_1/value_log'].create_dataset('time', data=dayfraction_converter(dayfraction_r))
                 chamber['sensor_1/value_log/time'].attrs['start'] = starting_time
                 chamber['sensor_1/value_log/time'].attrs['unit'] = 's'
+                chamber['sensor_1/value_log/time'].attrs['target'] = '/entry/instrument/chamber/sensor_1/value_log/time'
                 # /entry/instrument/chamber/sensor_1/value_log/value
                 chamber['sensor_1/value_log'].create_dataset('value', data=calib_950)
                 chamber['sensor_1/value_log/value'].attrs['description'] = 'Reflectivity of the sample'
+                chamber['sensor_1/value_log/value'].attrs['target'] = '/entry/instrument/chamber/sensor_1/value_log/value'
+
+                # /entry/950_reflectivity_log
+                entry.create_group('950_reflectivity_log')
+                refl950_log = entry['950_reflectivity_log']
+                refl950_log.attrs["NX_class"] = "NXdata"
+                refl950_log["value"] = chamber['sensor_1/value_log/value']
+                refl950_log["time"] = chamber['sensor_1/value_log/time']
+                refl950_log.attrs["signal"] = "value"
+                refl950_log.attrs["axes"] = "time"
+                refl950_log.attrs["title"] = "950 nm Reflectivity Log"
 
             # /entry/instrument/chamber/sensor_2
             chamber.create_group(f"sensor_2")
@@ -483,9 +498,22 @@ for sample_id, number in zip(sample_id_list, number_list):
                 chamber['sensor_2/value_log'].create_dataset('time', data=dayfraction_converter(dayfraction_r))
                 chamber['sensor_2/value_log/time'].attrs['start'] = starting_time
                 chamber['sensor_2/value_log/time'].attrs['unit'] = 's'
+                chamber['sensor_2/value_log/time'].attrs['target'] = '/entry/instrument/chamber/sensor_2/value_log/time'
                 # /entry/instrument/chamber/sensor_2/value_log/value
                 chamber['sensor_2/value_log'].create_dataset('value', data=calib_470)
                 chamber['sensor_2/value_log/value'].attrs['description'] = 'Reflectivity of the sample'
+                chamber['sensor_2/value_log/value'].attrs['target'] = '/entry/instrument/chamber/sensor_2/value_log/value'
+
+                # /entry/470_reflectivity_log
+                entry.create_group('470_reflectivity_log')
+                refl470_log = entry['470_reflectivity_log']
+                refl470_log.attrs["NX_class"] = "NXdata"
+                refl470_log["value"] = chamber['sensor_2/value_log/value']
+                refl470_log["time"] = chamber['sensor_2/value_log/time']
+                refl470_log.attrs["signal"] = "value"
+                refl470_log.attrs["axes"] = "time"
+                refl470_log.attrs["title"] = "470 nm Reflectivity Log"
+                
 
             # /entry/instrument/chamber/sensor_3
             chamber.create_group("sensor_3")
@@ -510,9 +538,21 @@ for sample_id, number in zip(sample_id_list, number_list):
                 chamber['sensor_3/value_log'].create_dataset('time', data=dayfraction_converter(dayfraction_p))
                 chamber['sensor_3/value_log/time'].attrs['start'] = starting_time
                 chamber['sensor_3/value_log/time'].attrs['unit'] = 's'
+                chamber['sensor_3/value_log/time'].attrs['target'] = '/entry/instrument/chamber/sensor_3/value_log/time'
                 # /entry/instrument/chamber/sensor_3/value_log/value
                 chamber['sensor_3/value_log'].create_dataset('value', data=t_ratio)
                 chamber['sensor_3/value_log/value'].attrs['description'] = 'Rate temperature'
+                chamber['sensor_3/value_log/value'].attrs['target'] = '/entry/instrument/chamber/sensor_3/value_log/value'
+
+                # /entry/rate_temperature_log
+                entry.create_group('rate_temperature_log')
+                rate_log = entry['rate_temperature_log']
+                rate_log.attrs["NX_class"] = "NXdata"
+                rate_log["value"] = chamber['sensor_3/value_log/value']
+                rate_log["time"] = chamber['sensor_3/value_log/time']
+                rate_log.attrs["signal"] = "value"
+                rate_log.attrs["axes"] = "time"
+                rate_log.attrs["title"] = "Rate Temperature Log"
 
             # /entry/instrument/chamber/sensor_4
             chamber.create_group("sensor_4")
@@ -538,10 +578,22 @@ for sample_id, number in zip(sample_id_list, number_list):
                 chamber['sensor_4/value_log'].create_dataset('time', data=dayfraction_converter(dayfraction_p))
                 chamber['sensor_4/value_log/time'].attrs['start'] = starting_time
                 chamber['sensor_4/value_log/time'].attrs['unit'] = 's'
+                chamber['sensor_4/value_log/time'].attrs['target'] = '/entry/instrument/chamber/sensor_4/value_log/time'
                 # /entry/instrument/chamber/sensor_4/value_log/value
                 chamber['sensor_4/value_log'].create_dataset('value', data=t_emiss)
                 chamber['sensor_4/value_log/value'].attrs['description'] = 'Emissivity temperature'
                 chamber['sensor_4/value_log/value'].attrs['unit'] = '°C'
+                chamber['sensor_4/value_log/value'].attrs['target'] = '/entry/instrument/chamber/sensor_4/value_log/value'
+
+                # /entry/emissivity_temperature_log
+                entry.create_group('emissivity_temperature_log')
+                emiss_log = entry['emissivity_temperature_log']
+                emiss_log.attrs["NX_class"] = "NXdata"
+                emiss_log["value"] = chamber['sensor_4/value_log/value']
+                emiss_log["time"] = chamber['sensor_4/value_log/time']
+                emiss_log.attrs["signal"] = "value"
+                emiss_log.attrs["axes"] = "time"
+                emiss_log.attrs["title"] = "Emissivity Temperature Log (°C)"
 
             # /entry/instrument/chamber/sensor_5
             chamber.create_group("sensor_5")
@@ -567,10 +619,12 @@ for sample_id, number in zip(sample_id_list, number_list):
                 chamber['sensor_5/value_log'].create_dataset('time', data=log_time_converter(time_l))
                 chamber['sensor_5/value_log/time'].attrs['start'] = starting_time
                 chamber['sensor_5/value_log/time'].attrs['unit'] = 's'
+                chamber['sensor_5/value_log/time'].attrs['target'] = '/entry/instrument/chamber/sensor_5/temperature/time'
                 # /entry/instrument/chamber/sensor_5/temperature/value
                 chamber['sensor_5/value_log'].create_dataset('value', data=pressure_l)
                 chamber['sensor_5/value_log/value'].attrs['description'] = 'Pressure'
                 chamber['sensor_5/value_log/value'].attrs['unit'] = 'Torr'
+                chamber['sensor_5/value_log/value'].attrs['target'] = '/entry/instrument/chamber/sensor_5/temperature/value'
 
                 # /entry/pressure_log
                 entry.create_group('pressure_log')
@@ -579,7 +633,7 @@ for sample_id, number in zip(sample_id_list, number_list):
                 pressure_log["value"] = chamber['sensor_5/value_log/value']
                 pressure_log["time"] = chamber['sensor_5/value_log/time']
                 pressure_log.attrs["signal"] = "value"
-                pressure_log.attrs["axes"] = ["time"]
+                pressure_log.attrs["axes"] = "time"
                 pressure_log.attrs["title"] = "Pressure Log (Torr)"
 
             # NXcooling_device: /entry/instrument/chamber/cooling_device
@@ -607,4 +661,4 @@ for sample_id, number in zip(sample_id_list, number_list):
             print(f"Error: Failed to create {filename}.")
 
     except Exception as e:
-        print(f"Error processing hm{sample_id}: {e}")
+        print(f"Error processing {sample_id}: {e}")

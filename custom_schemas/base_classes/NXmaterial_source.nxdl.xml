@@ -22,7 +22,7 @@
 	</field>
 	<field name="model" type="NX_CHAR">
 		<doc>
-            material source device identification code/model number
+            Material source device identification code/model number
         </doc>
 	</field>
     <field name="type" type="NX_CHAR">
