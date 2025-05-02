@@ -99,21 +99,22 @@ def parse_substrate(file_path):
 
     pattern = re.compile(r"""
         Substrate:\s+
-        (?P<orientation>\(\d{3}\)[AB]?)                     # Crystal orientation
-        (?:\s+\d+deg\s+off\s+to\s+[-\d]+)?                  # Optional miscut
-        \s+
+        (?P<orientation>\(?\d{3}\)[AB]?)                    # Crystal orientation
+        (?:\s+\d+deg\s+off(?:\s+to\s+[-\d]+)?)?             # Optional miscut
+        \s*
         (?P<doping>SI|p\+|p-|n\+|n-)                        # Doping
         (?:\s+(?P<convention>EJ|US))?                       # Optional convention
         (?:\s+(?P<thickness>\d+)um)?                        # Optional thickness 
         (?:\s+\w+)*
         [\s;]*                                              # Space or ;
         #(?P<area>\d+/\d+|\d+)?\s*(?:di|of)?\s*             
-        (?P<area>\d+/\d+|\d+|\bpiece\b)?\s*                 # Area (fraction or int) 
+        (?:~\s*)?(?P<area>\d+/\d+|\d+|\bpiece\b)?\s*        # Area (fraction or int) 
         (?:[^'\d]*?)?                                       # Ignore optional noise 
         (?:di|of)?\s*
-        (?P<diameter>\d+)''\s*                              # Diameter
+        (?P<diameter>\d+)(?:''|' ?'|")\s*                   # Diameter
+        \s*
         (?P<name>[^;]+?)\s*;\s*                             # Name
-        (?P<holder>(Ta|Mo)[A-Za-z0-9]*)                     # Holder 
+        (?:(?P<holder>(Ta|Mo)[A-Za-z0-9]*))?                # Holder 
     """, re.VERBOSE)
 
     pattern_special = re.compile(r"""
@@ -126,12 +127,26 @@ def parse_substrate(file_path):
         (?:of\s*)?
         (?P<diameter>\d+)''\s*
         ;?\s*
-        (?P<holder>Ta[A-Za-z0-9]+)
+        (?P<holder>(Ta|Mo)[A-Za-z0-9]+)
     """, re.VERBOSE)
 
-    match = pattern.search(substrate_text)
-    if not match:
-        match = pattern_special.search(substrate_text)
+    pattern_NIL = re.compile(r"""
+        Substrate:\s+
+        (?P<orientation>\(\d{3}\)[AB]?)\s+
+        (?P<doping>SI|p\+|p-|n\+|n-)\s*
+        (?: (?P<convention>EJ|US) \s* )?     
+        (?: (?P<area>\d+X\d+cm\^2) )? \s* ;\s*  
+        (?P<name>(?:NIL\s+)?pattern\s+\d+(?:-\d+)?(?:\s*[\+\-]?\s*\w+)?)
+        \s*;\s*
+        (?P<holder>(Ta|Mo)[A-Za-z0-9]+)
+    """, re.VERBOSE)
+
+
+    match = (
+        pattern.search(substrate_text)
+        or pattern_special.search(substrate_text)
+        or pattern_NIL.search(substrate_text)
+    )
 
     if not match:
         raise ValueError(f"Substrate parsing failed for text: {substrate_text}")
@@ -264,7 +279,7 @@ def parse_layer(file_path):
     no_elements = ['interruption']
     r_step_adjust = 0
 
-    for line in lines:
+    for i, line in enumerate(lines):
         
         if re.match(r'^\d+\s+\d+\s+\d+\s+\w+', line):
             columns = line.split()
@@ -313,7 +328,10 @@ def parse_layer(file_path):
             shutter_status = [(col == 'TRUE' or col == 'O') for col in columns[8:12]]
             shutters.append(shutter_status)
             # Partial growth rates
-            pgr_layer = list(map(float, columns[14:18]))
+            if len(columns) == 18:   # Handle case where C shutter is not present in the files
+                pgr_layer = list(map(float, columns[14:18]))
+            else:
+                pgr_layer = list(map(float, columns[13:17]))
             pg_rates.append(pgr_layer)
  
     return layer, loop, r_step, material, dop_element, thickness, time, rate, x, shutters, pg_rates
@@ -409,9 +427,12 @@ def parse_log(file_path):
         if log_started:
             match = re.match(r"^\d+\s+([\d:]+)\s+([0-9.Ee\-]+)", line)
             if match:
-                total_time = match.group(1)
-                pressure = match.group(2)
-                total_times.append(total_time)
-                pressures.append(float(pressure))
+                try:
+                    total_time = match.group(1)
+                    pressure = match.group(2)
+                    total_times.append(total_time)
+                    pressures.append(float(pressure))
+                except (IndexError, ValueError):
+                    continue
 
     return timestamp, total_times, pressures

@@ -55,19 +55,19 @@ for sample_id, number in zip(sample_id_list, number_list):
         # Optional files
         if os.path.exists(refl_path):
             timestamp_r, dayfraction_r, calib_950, calib_470 = parse_reflectometer(refl_path)
-        #else:
-         #  print(f"Warning: Missing {refl_path}, skipping sensor parsing.")
+        else:
+           print(f"Warning: Missing {refl_path}, skipping sensor parsing.")
         if os.path.exists(pyro_path):
             timestamp_p, dayfraction_p, t_ratio, t_emiss = parse_pyrometer(pyro_path)
-        #else:
-         #  print(f"Warning: Missing {pyro_path}, skipping sensor parsing.")
+        else:
+           print(f"Warning: Missing {pyro_path}, skipping sensor parsing.")
         if os.path.exists(log_path):
             timestamp_l, time_l, pressure_l = parse_log(log_path)
-        #else:
-         #  print(f"Warning: Missing {log_path}, skipping sensor parsing.")
+        else:
+           print(f"Warning: Missing {log_path}, skipping sensor parsing.")
 
         # Path of the file
-        output_directory = Path("./nexus_files")  
+        output_directory = Path("./nexus_files/")  
         output_directory.mkdir(parents=True, exist_ok=True)
         # File name
         filename = f"{sample_id}.nxs"
@@ -282,29 +282,30 @@ for sample_id, number in zip(sample_id_list, number_list):
                         cell.attrs["description"] = 'Partial growth rate of the cell'
                         cell.attrs["units"] = 'Å/s'
 
-                # NXmaterial_source: /entry/sample/layer/material_source
-                layer.create_group(f"cell_{cell_number+1}")
-                cell_as = layer[f'cell_{cell_number+1}']
-                cell_as.attrs["NX_class"] = "NXmaterial_source"
-                # /entry/sample/layer/cell/name
-                cell_as.create_dataset('name', data='Arsenic Cell')
-                cell_as['name'].attrs["description"] = 'Name of the material source device'
-                # /entry/sample/layer/cell/model
-                cell_as.create_dataset('model', data='')
-                cell_as['model'].attrs["description"] = 'Model of the material source device'
-                # /entry/sample/layer/cell/type
-                cell_as.create_dataset('type', data='effusion_cell')
-                cell_as['type'].attrs["description"] = 'Type of material source device'
-                # /entry/sample/layer/cell/shutter_status
-                cell_as.create_dataset('shutter_status', data='open')
-                cell_as['shutter_status'].attrs["description"] = 'Status of the shutter during this layer growth step'
-                # /entry/sample/layer/cell/material
-                cell_as.create_dataset('material', data='Arsenic')
-                cell_as['material'].attrs["description"] = 'Material of the cell'
-                # /entry/sample/layer/cell/partial_pressure
-                cell_as.create_dataset('partial_pressure', data=As_pp)
-                cell_as.attrs["description"] = 'Partial pressure of the cell'
-                cell_as.attrs["units"] = 'Torr'
+                if material[i] != "Si" or material[i] != "C":
+                    # NXmaterial_source: /entry/sample/layer/material_source
+                    layer.create_group(f"cell_{cell_number+1}")
+                    cell_as = layer[f'cell_{cell_number+1}']
+                    cell_as.attrs["NX_class"] = "NXmaterial_source"
+                    # /entry/sample/layer/cell/name
+                    cell_as.create_dataset('name', data='Arsenic Cell')
+                    cell_as['name'].attrs["description"] = 'Name of the material source device'
+                    # /entry/sample/layer/cell/model
+                    cell_as.create_dataset('model', data='')
+                    cell_as['model'].attrs["description"] = 'Model of the material source device'
+                    # /entry/sample/layer/cell/type
+                    cell_as.create_dataset('type', data='effusion_cell')
+                    cell_as['type'].attrs["description"] = 'Type of material source device'
+                    # /entry/sample/layer/cell/shutter_status
+                    cell_as.create_dataset('shutter_status', data='open')
+                    cell_as['shutter_status'].attrs["description"] = 'Status of the shutter during this layer growth step'
+                    # /entry/sample/layer/cell/material
+                    cell_as.create_dataset('material', data='Arsenic')
+                    cell_as['material'].attrs["description"] = 'Material of the cell'
+                    # /entry/sample/layer/cell/partial_pressure
+                    cell_as.create_dataset('partial_pressure', data=As_pp)
+                    cell_as.attrs["description"] = 'Partial pressure of the cell'
+                    cell_as.attrs["units"] = 'Torr'
 
                 current_layer += 1
 
@@ -360,7 +361,7 @@ for sample_id, number in zip(sample_id_list, number_list):
                             cell_material = ["Gallium", "Gallium", "Aluminium", "Indium"]
                             cell_names = ["First Gallium Cell", "Second Gallium Cell", "Aluminium Cell", "Indium Cell"]
                             cell_number = 0
-                            for k, open in enumerate(shutters[i]):
+                            for k, open in enumerate(shutters[j]):
                                 if open:
                                     cell_number += 1
 
@@ -384,7 +385,7 @@ for sample_id, number in zip(sample_id_list, number_list):
                                     cell.create_dataset('material', data=cell_material[k])
                                     cell['material'].attrs["description"] = 'Material of the cell'
                                     # /entry/sample/layer/cell/partial_growth_rate
-                                    cell.create_dataset('partial_growth_rate', data=pg_rates[i][k])
+                                    cell.create_dataset('partial_growth_rate', data=pg_rates[j][k])
                                     cell.attrs["description"] = 'Partial growth rate of the cell'
                                     cell.attrs["units"] = 'Å/s'
 

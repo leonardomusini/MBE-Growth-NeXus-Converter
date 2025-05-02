@@ -61,7 +61,7 @@ def time_calculator(time_str, time_delta_str):
 
 # ----------------------------------
 
-def area_converter(area: str) -> float:
+def area_converter(area):
     """
     Converts an area value given as a fraction or integer string into mm².
 
@@ -73,8 +73,14 @@ def area_converter(area: str) -> float:
     """
     base_area = 2000  # "1" = 2000 mm²
 
-    if area.lower() == "piece":
+    if not area or area.lower() == "piece":
         return 0.0
+    
+    match = re.match(r"(\d+(?:\.\d+)?)X(\d+(?:\.\d+)?)cm\^2", area)
+    if match:
+        x1 = float(match.group(1))
+        x2 = float(match.group(2))
+        return x1 * x2 * 100
 
     try:
         numeric_value = float(Fraction(area))  
@@ -123,16 +129,18 @@ def arsenic_ranges(value):
 
     # Typo in scientific notation
     value = value.strip().replace(".E", "E")
+    if value and value.startswith("E-"):
+        value = "1" + value
 
     # Pattern to detect ranges
-    match = re.match(r"^(\d+(\.\d+)?)-(\d+(\.\d+)?E[-+]?\d+)$", value)
+    match = re.match(r"^(\d+(\.\d+)?)-(\d+(\.\d+)?[Ee][-+]?\d+)$", value)
     
     if match:
         first_match = float(match.group(1))  
         second_match = float(match.group(3))  
         
         # Extract the exponent from the second number 
-        exponent_match = re.search(r"E([-+]?\d+)", match.group(3))
+        exponent_match = re.search(r"[Ee]([-+]?\d+)", match.group(3))
         if exponent_match:
             exponent = int(exponent_match.group(1))  
             first_match = first_match * (10 ** exponent)  
@@ -241,8 +249,8 @@ def alloy_inserter(material, alloy):
         el2 = material[2:4]
         el3 = material[4:]
 
-        # EL1(x)EL2(1-x)EL3
-        new_name = f"{el1}({alloy:.2f}){el2}({1 - alloy:.2f}){el3}"
+        # EL1_(x)EL2_(1-x)EL3
+        new_name = f"{el1}$_{{{alloy:.2f}}}${el2}$_{{{1 - alloy:.2f}}}${el3}"
 
         return new_name
 
